@@ -64,7 +64,7 @@ async function run() {
       res.send(result)
     }) 
 
-    app.delete("/toy/:id", async(req, res)=>{
+    app.delete("/toys/:id", async(req, res)=>{
       try{
       
         const id = req.params.id;
