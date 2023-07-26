@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -28,12 +28,65 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const toyCollection = client.db("toyManager").collection("toys")
+
+    //insert a toy info to db
+
+    app.get("/marvel", (req, res)=>{
+      res.send("All is well")
+    })
+
+    app.post("/upload", async(req, res)=>{
+      const data = req.body;
+      console.log(data)
+
+      const result = await toyCollection.insertOne(data)
+      res.send(result)
+    })
+
+    app.get("/toys", async(req, res)=> {
+      const toys = toyCollection.find()
+      const result = await toys.toArray()
+      res.send(result)
+    })
+
+    app.patch("/toy/:id", async(req, res)=>{
+      const id = req.params.id;
+      const updatedToyDetails = req.body;
+      const filter = {_id : new ObjectId(id)}
+      const updatedDoc = {
+        $set: {
+          ...updatedToyDetails
+        }
+      }
+      const result = await toyCollection.updateOne(filter, updatedDoc)
+      res.send(result)
+    }) 
+
+    app.delete("/toy/:id", async(req, res)=>{
+      try{
+      
+        const id = req.params.id;
+        const filter = {_id : new ObjectId(id)}
+        
+        const result = await toyCollection.deleteOne(filter)
+        res.send(result) 
+      } catch(err){
+        res.send(err.message)
+      }
+    }) 
+
+    
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    //  await client.close();
   }
 }
 run().catch(console.dir);
