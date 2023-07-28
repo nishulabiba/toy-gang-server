@@ -51,7 +51,8 @@ async function run() {
       res.send(result)
     })
 
-    app.patch("/toy/:id", async(req, res)=>{
+
+    app.patch("/toys/:id", async(req, res)=>{
       const id = req.params.id;
       const updatedToyDetails = req.body;
       const filter = {_id : new ObjectId(id)}
