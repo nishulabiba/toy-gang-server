@@ -9,8 +9,6 @@ const port = process.env.PORT || 5000;
  app.use(cors());
  app.use(express.json());
 
- console.log(process.env.DB_PASS)
-
  
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ubbebrm.mongodb.net/?retryWrites=true&w=majority`;
@@ -45,7 +43,7 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/toys", async(req, res)=> {
+    app.get("/", async(req, res)=> {
       const toys = toyCollection.find()
       const result = await toys.toArray()
       res.send(result)
@@ -93,7 +91,7 @@ async function run() {
 run().catch(console.dir);
 
 
- app.get('/', (req, res)=>{
+ app.get('/toys', (req, res)=>{
     res.send("The site is running")
  })
 
