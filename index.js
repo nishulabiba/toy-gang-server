@@ -43,14 +43,22 @@ async function run() {
       res.send(result)
     })
 
-    app.get("/", async(req, res)=> {
+    app.get('/toys', async(req, res)=> {
       const toys = toyCollection.find()
       const result = await toys.toArray()
       res.send(result)
     })
 
+    app.get('/toy/:id', async(req, res)=>{
+      const toy = await toyCollection.findOne({
+        _id: new ObjectId(req.params.id)
 
-    app.patch("/toys/:id", async(req, res)=>{
+      })
+      res.send(toy)
+    })
+
+
+    app.patch("/update/:id", async(req, res)=>{
       const id = req.params.id;
       const updatedToyDetails = req.body;
       const filter = {_id : new ObjectId(id)}
@@ -63,7 +71,7 @@ async function run() {
       res.send(result)
     }) 
 
-    app.delete("/toys/:id", async(req, res)=>{
+    app.delete("/delete/:id", async(req, res)=>{
       try{
       
         const id = req.params.id;
@@ -91,7 +99,7 @@ async function run() {
 run().catch(console.dir);
 
 
- app.get('/toys', (req, res)=>{
+ app.get('/', (req, res)=>{
     res.send("The site is running")
  })
 
